@@ -29,7 +29,14 @@ router.put(
     params: ParamsWithId,
     body: Todo,
   }),
-  TodoHandlers.updateOne
+  TodoHandlers.updateOne,
+);
+router.delete(
+  '/:id',
+  validateRequest({
+    params: ParamsWithId,
+  }),
+  TodoHandlers.deleteOne,
 );
 
 export default router;

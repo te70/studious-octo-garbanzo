@@ -1,3 +1,4 @@
+import { response } from 'express';
 import request from 'supertest';
 
 import app from '../../app';
@@ -113,7 +114,7 @@ describe('PUT /api/v1/todos', () => {
         done: true,
       })
       .expect('Content-Type', /json/)
-      .expect(204)
+      .expect(200)
       .then((response) => {
         expect(response.body).toHaveProperty('_id');
         expect(response.body._id).toBe(id);
@@ -124,6 +125,31 @@ describe('PUT /api/v1/todos', () => {
   );
 });
 
+describe('DELETE /api/v1/todos/:id', () => {
+  it('responds with an invalid ObjectId error', (done) => {
+    request(app)
+      .delete('/api/v1/todos/ffdfdfdf')
+      .set('Accept', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(422, done);
+  });
+  it('responds with a not found error', (done) => {
+    request(app)
+      .delete('/api/v1/todos/fdsdfsfsbf')
+      .set('Accept', 'application/json')
+      .send({
+        content: 'Learn Typescript',
+        done: true,
+      })
+      .expect('Content-Type', /json/)
+      .expect(404, done);
+  });
+  it('responds with a 204 status code', (done) => {
+    request(app)
+      .delete(`/api/v1/todos/${id}`)
+      .expect(204, done);
+  });
+});
 
 
 
